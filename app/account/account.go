@@ -3,9 +3,9 @@ package account
 import "time"
 
 type Account struct {
-	id           int64
-	email        string
-	password     string
-	status       string
-	creationDate time.Time
+	Email        string
+	Password     string
+	Status       string
+	Username     string
+	CreationDate time.Time
 }

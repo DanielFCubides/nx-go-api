@@ -6,6 +6,8 @@ import (
 	log "github.com/sirupsen/logrus"
 	"net/http"
 	"nx-go-api/app/account/controllers"
+	_ "nx-go-api/app/account/usecases"
+	_ "nx-go-api/app/account/usecases/implementations"
 	"os"
 )
 

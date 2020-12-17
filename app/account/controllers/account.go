@@ -3,60 +3,84 @@ package controllers
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/thoas/go-funk"
 	"net/http"
 	"nx-go-api/app"
+	"nx-go-api/app/account"
+	"nx-go-api/app/account/usecases"
+	"time"
 )
 
-type Account struct {
+type AccountHandler struct {
+	UseCase usecases.AccountUseCase
 }
 
-func NewPublic() *Account {
-	return &Account{}
+func NewPublic(useCase usecases.AccountUseCase) *AccountHandler {
+	return &AccountHandler{
+		UseCase: useCase,
+	}
 }
 
 func init() {
 	err := app.Injector.Provide(NewPublic)
 	if err != nil {
-		fmt.Println("Error providing Account Account Controller:", err)
+		fmt.Println("Error providing AccountHandler AccountHandler Controller:", err)
 		panic(err)
 	}
 }
 
-type AccountRequest struct {
-	Username string `json:"username"`
-	Email    string `json:"email"`
-	Password string `json:"password"`
-}
-
-func (h *Account) CreateAccount(c *gin.Context) {
+func (h *AccountHandler) CreateAccount(c *gin.Context) {
 	var request AccountRequest
 	err := c.BindJSON(&request)
 	if err != nil {
 		c.Writer.WriteHeader(http.StatusBadRequest)
 		return
 	}
-
-	//c.Writer.WriteHeader(http.StatusOK)
-	c.JSON(http.StatusOK, request)
+	accountDomain := h.toDomain(request)
+	accountResponse := toRequest(h.UseCase.Create(accountDomain))
+	c.JSON(http.StatusOK, accountResponse)
 }
 
-func (h *Account) EditAccount(c *gin.Context) {
-	id := c.Param("id")
+func (h *AccountHandler) EditAccount(c *gin.Context) {
+	email := c.Param("email")
 	var request AccountRequest
 	err := c.BindJSON(&request)
 	if err != nil {
 		c.Writer.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	request.Email = id
-	c.JSON(http.StatusOK, request)
+	request.Email = email
+	accountDomain := h.toDomain(request)
+	accountResponse := toRequest(h.UseCase.Edit(accountDomain))
+	c.JSON(http.StatusOK, accountResponse)
 }
 
-func (h *Account) GetAccount(c *gin.Context) {
-	id := c.Param("id")
-	c.String(http.StatusOK, id)
+func (h *AccountHandler) GetAccount(c *gin.Context) {
+	email := c.Param("email")
+	accountResponse := toRequest(h.UseCase.Find(email))
+	c.JSON(http.StatusOK, accountResponse)
 }
 
-func (h *Account) GetAccounts(c *gin.Context) {
-	c.String(http.StatusOK, "looking all ")
+func (h *AccountHandler) GetAccounts(c *gin.Context) {
+	accounts := funk.Map(h.UseCase.FindAll(), toRequest)
+	c.JSON(http.StatusOK, accounts)
+
+}
+
+func toRequest(a account.Account) AccountRequest {
+	return AccountRequest{
+		Username: a.Username,
+		Email:    a.Email,
+		Password: a.Password,
+	}
+}
+
+func (h *AccountHandler) toDomain(request AccountRequest) account.Account {
+	return account.Account{
+		Email:        request.Email,
+		Password:     request.Password,
+		Status:       "active",
+		Username:     request.Username,
+		CreationDate: time.Now(),
+	}
 }

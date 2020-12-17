@@ -7,8 +7,8 @@ import (
 )
 
 func SetupAccountRoutes(r *gin.Engine) {
-	var controller *Account
-	invokeFunc := func(h *Account) {
+	var controller *AccountHandler
+	invokeFunc := func(h *AccountHandler) {
 		controller = h
 	}
 
@@ -17,7 +17,7 @@ func SetupAccountRoutes(r *gin.Engine) {
 		logrus.Warn("could not register account controller to the server")
 	}
 	r.POST("/v1/accounts/", controller.CreateAccount)
-	r.PUT("/v1/accounts/:id", controller.EditAccount)
-	r.GET("/v1/accounts/:id", controller.GetAccount)
+	r.PUT("/v1/accounts/:email", controller.EditAccount)
+	r.GET("/v1/accounts/:email", controller.GetAccount)
 	r.GET("/v1/accounts/", controller.GetAccounts)
 }
