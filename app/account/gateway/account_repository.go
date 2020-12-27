@@ -1,8 +1,10 @@
-package usecases
+package gateway
 
-import "nx-go-api/app/account"
+import (
+	"nx-go-api/app/account"
+)
 
-type AccountUseCase interface {
+type AccountRepository interface {
 	Create(account account.Account) account.Account
 	FindAll() []account.Account
 	FindByEmail(email string) account.Account

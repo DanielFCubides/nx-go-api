@@ -4,14 +4,16 @@ import (
 	"fmt"
 	"nx-go-api/app"
 	"nx-go-api/app/account"
+	"nx-go-api/app/account/gateway"
 	"nx-go-api/app/account/usecases"
-	"time"
 )
 
-type AccountUseCase struct{}
+type AccountUseCase struct {
+	AccountRepository gateway.AccountRepository
+}
 
-func NewAccountUseCase() usecases.AccountUseCase {
-	return &AccountUseCase{}
+func NewAccountUseCase(AccountRepository gateway.AccountRepository) usecases.AccountUseCase {
+	return &AccountUseCase{AccountRepository: AccountRepository}
 }
 
 func init() {
@@ -19,23 +21,22 @@ func init() {
 	if err != nil {
 		fmt.Println("Error providing AccountUseCase :", err)
 		panic(err)
+
 	}
 }
 
-func (AccountUseCase) Create(account account.Account) account.Account {
-	return account
+func (uc *AccountUseCase) Create(account account.Account) account.Account {
+	return uc.AccountRepository.Create(account)
 }
 
-func (AccountUseCase) FindAll() []account.Account {
-	return []account.Account{{"", "", "", "", time.Now()}}
+func (uc *AccountUseCase) FindAll() []account.Account {
+	return uc.AccountRepository.FindAll()
 }
 
-func (AccountUseCase) Find(email string) account.Account {
-	return account.Account{
-		Email: email,
-	}
+func (uc *AccountUseCase) FindByEmail(email string) account.Account {
+	return uc.AccountRepository.FindByEmail(email)
 }
 
-func (AccountUseCase) Edit(account account.Account) account.Account {
-	return account
+func (uc *AccountUseCase) Edit(acc account.Account) account.Account {
+	return uc.AccountRepository.Edit(acc)
 }

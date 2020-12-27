@@ -6,6 +6,8 @@ import (
 	log "github.com/sirupsen/logrus"
 	"net/http"
 	"nx-go-api/app/account/controllers"
+	"nx-go-api/app/account/gateway"
+	_ "nx-go-api/app/account/gateway/implementations"
 	_ "nx-go-api/app/account/usecases"
 	_ "nx-go-api/app/account/usecases/implementations"
 	"os"
@@ -26,7 +28,7 @@ func NewServer() *Server {
 	s := &Server{Router: router}
 	//s.loadAuthorizer()
 	s.setupRoutes()
-	//s.initModels()
+	s.initModels()
 	//s.setupLogger()
 	return s
 }
@@ -36,9 +38,9 @@ func (s *Server) setupRoutes() {
 	health(s)
 }
 
-//func (s *Server) initModels() {
-//	accountInitializer.Migrate()
-//}
+func (s *Server) initModels() {
+	gateway.Migrate()
+}
 
 // Run starts the server
 func (s *Server) Run() {
