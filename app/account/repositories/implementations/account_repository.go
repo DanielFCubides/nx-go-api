@@ -6,7 +6,7 @@ import (
 	"github.com/thoas/go-funk"
 	"nx-go-api/app"
 	"nx-go-api/app/account"
-	"nx-go-api/app/account/gateway"
+	"nx-go-api/app/account/repositories"
 	sql "nx-go-api/infrastructure/datasources"
 	"time"
 )
@@ -15,7 +15,7 @@ type DBAccountRepository struct {
 	db *gorm.DB
 }
 
-func NewDBAccountRepository(conn sql.Connection) gateway.AccountRepository {
+func NewDBAccountRepository(conn sql.Connection) repositories.AccountRepository {
 	db := conn.GetDatabase()
 	return &DBAccountRepository{db: db}
 }
@@ -38,7 +38,7 @@ func (repo *DBAccountRepository) Create(accountToCreate account.Account) account
 }
 
 func (repo *DBAccountRepository) FindAll() []account.Account {
-	var accList []gateway.Account
+	var accList []repositories.Account
 	result := repo.db.Find(&accList)
 	if result.Error != nil {
 		return []account.Account{}
@@ -47,7 +47,7 @@ func (repo *DBAccountRepository) FindAll() []account.Account {
 }
 
 func (repo *DBAccountRepository) FindByEmail(email string) account.Account {
-	var acc gateway.Account
+	var acc repositories.Account
 	err := repo.db.Where("email = ?", email).First(&acc).Error
 	if err != nil {
 		return account.Account{}
@@ -56,7 +56,7 @@ func (repo *DBAccountRepository) FindByEmail(email string) account.Account {
 }
 
 func (repo *DBAccountRepository) Edit(accountToEdit account.Account) account.Account {
-	var accToUpdate gateway.Account
+	var accToUpdate repositories.Account
 	if err := repo.db.Where("email = ?", accountToEdit.Email).First(&accToUpdate).Error; err != nil {
 		return account.Account{}
 	}
@@ -69,7 +69,7 @@ func (repo *DBAccountRepository) Edit(accountToEdit account.Account) account.Acc
 
 }
 
-func toDomain(acc gateway.Account) account.Account {
+func toDomain(acc repositories.Account) account.Account {
 	return account.Account{
 		ID:           acc.ID,
 		Email:        acc.Email,
@@ -80,8 +80,8 @@ func toDomain(acc gateway.Account) account.Account {
 	}
 }
 
-func toEntity(a account.Account) gateway.Account {
-	return gateway.Account{
+func toEntity(a account.Account) repositories.Account {
+	return repositories.Account{
 		ID:        a.ID,
 		CreatedAt: a.CreationDate,
 		UpdatedAt: time.Now(),

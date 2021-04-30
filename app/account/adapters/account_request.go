@@ -1,4 +1,4 @@
-package controllers
+package adapters
 
 type AccountRequest struct {
 	Username string `json:"username"`

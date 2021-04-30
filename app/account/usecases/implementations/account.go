@@ -4,15 +4,15 @@ import (
 	"fmt"
 	"nx-go-api/app"
 	"nx-go-api/app/account"
-	"nx-go-api/app/account/gateway"
+	"nx-go-api/app/account/repositories"
 	"nx-go-api/app/account/usecases"
 )
 
 type AccountUseCase struct {
-	AccountRepository gateway.AccountRepository
+	AccountRepository repositories.AccountRepository
 }
 
-func NewAccountUseCase(AccountRepository gateway.AccountRepository) usecases.AccountUseCase {
+func NewAccountUseCase(AccountRepository repositories.AccountRepository) usecases.AccountUseCase {
 	return &AccountUseCase{AccountRepository: AccountRepository}
 }
 

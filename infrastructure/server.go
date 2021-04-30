@@ -5,9 +5,9 @@ import (
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
 	"net/http"
-	"nx-go-api/app/account/controllers"
-	"nx-go-api/app/account/gateway"
-	_ "nx-go-api/app/account/gateway/implementations"
+	"nx-go-api/app/account/adapters"
+	"nx-go-api/app/account/repositories"
+	_ "nx-go-api/app/account/repositories/implementations"
 	_ "nx-go-api/app/account/usecases"
 	_ "nx-go-api/app/account/usecases/implementations"
 	"os"
@@ -34,12 +34,12 @@ func NewServer() *Server {
 }
 
 func (s *Server) setupRoutes() {
-	controllers.SetupAccountRoutes(s.Router)
+	adapters.SetupAccountRoutes(s.Router)
 	health(s)
 }
 
 func (s *Server) initModels() {
-	gateway.Migrate()
+	repositories.Migrate()
 }
 
 // Run starts the server

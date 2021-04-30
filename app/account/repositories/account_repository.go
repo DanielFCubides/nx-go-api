@@ -1,4 +1,4 @@
-package gateway
+package repositories
 
 import (
 	"nx-go-api/app/account"
