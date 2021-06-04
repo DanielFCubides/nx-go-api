@@ -1,6 +1,9 @@
 package main
 
-import "nx-go-api/infrastructure"
+import (
+	_ "nx-go-api/docs"
+	"nx-go-api/infrastructure"
+)
 
 func main() {
 	print("nx starting...")

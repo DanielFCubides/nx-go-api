@@ -1,0 +1,51 @@
+basePath: /
+consumes:
+- application/json
+definitions:
+  AccountRequest:
+    properties:
+      email:
+        type: string
+        x-go-name: Email
+      password:
+        type: string
+        x-go-name: Password
+      username:
+        type: string
+        x-go-name: Username
+    type: object
+    x-go-package: nx-go-api/app/account/adapters
+host: localhost:8001
+info:
+  description: Documentation of our API.
+  title: awesome.
+  version: 1.0.0
+paths:
+  /v1/accounts/:
+    post:
+      operationId: v1-account
+      parameters:
+      - description: This text will appear as description of your request body.
+        in: body
+        name: Body
+        schema:
+          $ref: '#/definitions/AccountRequest'
+      responses:
+        "200":
+          $ref: '#/responses/v1-post-account-response'
+      summary: Foobar does some amazing stuff.
+      tags:
+      - v1-account-tag
+produces:
+- application/json
+responses:
+  v1-post-account-response:
+    description: This text will appear as description of your response body.
+    schema:
+      $ref: '#/definitions/AccountRequest'
+schemes:
+- http
+securityDefinitions:
+  basic:
+    type: basic
+swagger: "2.0"
