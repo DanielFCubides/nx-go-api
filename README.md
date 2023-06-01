@@ -18,31 +18,20 @@ To get a local copy up and running follow these simple steps.
 ### Installation
 
 1. Clone the repo
-   ```sh
-   git clone https://github.com/DanielFCubides/nx-go-api.git
-   ```
-
-2. run database
-
-```shell
-docker run --name api-mysql -e MYSQL_ROOT_PASSWORD=r00t -e MYSQL_DATABASE=api -e MYSQL_USER=us3r -e MYSQL_PASSWORD=p455 -p 3301:3306 -d mysql:8
+```sh
+git clone https://github.com/DanielFCubides/nx-go-api.git
 ```
 
-3. Install dependencies
-   ```sh
-   go build -o api
-   ```
+2. run with docker-compose
 
-<!-- USAGE EXAMPLES -->
+```shell
+docker-compose up
+```
 
 ## Usage
 
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos
-work well in this space. You may also link to more resources.
+You can check the (openapi document)[./api.yaml] to learn gow to navigate this project.
 
-_For more examples, please refer to the [Documentation](https://example.com)_
-
-<!-- CONTRIBUTING -->
 ## Contributing
 
 Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any contributions you make are **greatly appreciated**.
