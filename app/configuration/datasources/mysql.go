@@ -2,12 +2,12 @@ package sql
 
 import (
 	"fmt"
+	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/mysql"
 	log "github.com/sirupsen/logrus"
 	"nx-go-api/app"
 	"os"
-
-	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/mysql"
+	"time"
 )
 
 func init() {
@@ -40,8 +40,20 @@ func NewMySQLConnection() (Connection, error) {
 		dbPort,
 		dbName)
 	log.Println(url)
-
 	db, err := gorm.Open("mysql", url)
+	i := 0
+	for {
+		if err != nil {
+			db, err = gorm.Open("mysql", url)
+		}
+		if i >= 10 || err == nil {
+			break
+		}
+		log.Printf("Iteration %d\n", i+1)
+		time.Sleep(1 * time.Second)
+		i++
+	}
+
 	db.LogMode(true)
 
 	if err != nil {

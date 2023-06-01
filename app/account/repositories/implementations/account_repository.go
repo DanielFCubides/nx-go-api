@@ -4,10 +4,11 @@ import (
 	"fmt"
 	"github.com/jinzhu/gorm"
 	"github.com/thoas/go-funk"
+	"log"
 	"nx-go-api/app"
 	"nx-go-api/app/account"
 	"nx-go-api/app/account/repositories"
-	sql "nx-go-api/infrastructure/datasources"
+	"nx-go-api/app/configuration/datasources"
 	"time"
 )
 
@@ -29,6 +30,7 @@ func init() {
 }
 
 func (repo *DBAccountRepository) Create(accountToCreate account.Account) account.Account {
+	log.Print(accountToCreate)
 	acc := toEntity(accountToCreate)
 	err := repo.db.Save(&acc)
 	if err.Error != nil {
@@ -85,7 +87,6 @@ func toEntity(a account.Account) repositories.Account {
 		ID:        a.ID,
 		CreatedAt: a.CreationDate,
 		UpdatedAt: time.Now(),
-		DeletedAt: nil,
 		Email:     a.Email,
 		Password:  a.Password,
 		Status:    a.Status,

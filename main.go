@@ -1,10 +1,12 @@
 package main
 
-import "nx-go-api/infrastructure"
+import (
+	"nx-go-api/app/configuration"
+)
 
 func main() {
 	print("nx starting...")
-	server := infrastructure.NewServer()
+	server := configuration.NewServer()
 	server.Run()
 	defer server.Close()
 

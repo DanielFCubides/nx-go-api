@@ -1,0 +1,68 @@
+openapi: 3.0.0
+info:
+  title: Account API
+  version: 1.0.0
+
+servers:
+  - description: local
+    url: http://localhost:8001
+paths:
+  /v1/accounts/:
+    post:
+      summary: Create account
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountRequest'
+      responses:
+        '201':
+          description: Created
+    get:
+      summary: Get all accounts
+      responses:
+        '200':
+          description: OK
+  /v1/accounts/{email}:
+    put:
+      summary: Edit account
+      parameters:
+        - name: email
+          in: path
+          required: true
+          schema:
+            type: string
+            format: email
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountRequest'
+      responses:
+        '200':
+          description: OK
+    get:
+      summary: Get account
+      parameters:
+        - name: email
+          in: path
+          required: true
+          schema:
+            type: string
+            format: email
+      responses:
+        '200':
+          description: OK
+
+components:
+  schemas:
+    AccountRequest:
+      type: object
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+          format: email
+        password:
+          type: string

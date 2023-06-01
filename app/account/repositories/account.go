@@ -2,7 +2,7 @@ package repositories
 
 import (
 	"nx-go-api/app"
-	sql "nx-go-api/infrastructure/datasources"
+	"nx-go-api/app/configuration/datasources"
 	"time"
 )
 
@@ -10,7 +10,7 @@ type Account struct {
 	ID        uint `gorm:"primary_key;autoIncrement"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
-	DeletedAt *time.Time `sql:"index"`
+	DeletedAt *time.Time `sql:"index; null"`
 	Email     string     `gorm:"unique;not null"`
 	Password  string
 	Status    string
