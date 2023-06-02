@@ -6,6 +6,8 @@ info:
 servers:
   - description: local
     url: http://localhost:8001
+  - description: aws
+    url: http://server.dfcubidesc.com:8002
 paths:
   /v1/accounts/:
     post:

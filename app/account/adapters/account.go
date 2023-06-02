@@ -37,7 +37,7 @@ func (h *AccountHandler) CreateAccount(c *gin.Context) {
 		return
 	}
 	accountDomain := toDomain(request)
-	accountResponse := toRequest(h.UseCase.Create(accountDomain))
+	accountResponse := toResponse(h.UseCase.Create(accountDomain))
 	c.JSON(http.StatusOK, accountResponse)
 }
 
@@ -51,18 +51,18 @@ func (h *AccountHandler) EditAccount(c *gin.Context) {
 	}
 	request.Email = email
 	accountDomain := toDomain(request)
-	accountResponse := toRequest(h.UseCase.Edit(accountDomain))
+	accountResponse := toResponse(h.UseCase.Edit(accountDomain))
 	c.JSON(http.StatusOK, accountResponse)
 }
 
 func (h *AccountHandler) GetAccount(c *gin.Context) {
 	email := c.Param("email")
-	accountResponse := toRequest(h.UseCase.FindByEmail(email))
+	accountResponse := toResponse(h.UseCase.FindByEmail(email))
 	c.JSON(http.StatusOK, accountResponse)
 }
 
 func (h *AccountHandler) GetAccounts(c *gin.Context) {
-	accounts := funk.Map(h.UseCase.FindAll(), toRequest)
+	accounts := funk.Map(h.UseCase.FindAll(), toResponse)
 	c.JSON(http.StatusOK, accounts)
 
 }
@@ -72,6 +72,13 @@ func toRequest(a account.Account) AccountRequest {
 		Username: a.Username,
 		Email:    a.Email,
 		Password: a.Password,
+	}
+}
+
+func toResponse(a account.Account) AccountResponse {
+	return AccountResponse{
+		Username: a.Username,
+		Email:    a.Email,
 	}
 }
 
