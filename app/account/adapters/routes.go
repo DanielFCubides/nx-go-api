@@ -17,7 +17,9 @@ func SetupAccountRoutes(r *gin.Engine) {
 		logrus.Warn("could not register account controller to the server")
 	}
 	r.POST("/v1/accounts/", controller.CreateAccount)
-	r.PUT("/v1/accounts/:email", controller.EditAccount)
-	r.GET("/v1/accounts/:email", controller.GetAccount)
-	r.GET("/v1/accounts/", controller.GetAccounts)
+	private := r.Group("")
+	//private.Use()
+	private.PUT("/v1/accounts/:email", controller.EditAccount)
+	private.GET("/v1/accounts/:email", controller.GetAccount)
+	private.GET("/v1/accounts/", controller.GetAccounts)
 }
