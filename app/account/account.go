@@ -2,6 +2,9 @@ package account
 
 import "time"
 
+const StatusActive = "ACTIVE"
+const StatusInactive = "INACTIVE"
+
 type Account struct {
 	ID           uint
 	Email        string
