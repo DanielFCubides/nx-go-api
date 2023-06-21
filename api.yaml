@@ -11,7 +11,7 @@ servers:
 
 
 paths:
-  /v1/accounts:
+  /v1/accounts/:
     post:
       summary: Create account
       operationId: createAccount
@@ -42,7 +42,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/AccountResponse'
-  /v1/accounts/{email}:
+  /v1/accounts/{email}/:
     put:
       security:
         - bearerAuth: [ ]

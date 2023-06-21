@@ -5,11 +5,14 @@ import (
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
 	"net/http"
-	"nx-go-api/app/account/adapters"
+	accadapter "nx-go-api/app/account/adapters"
 	"nx-go-api/app/account/repositories"
 	_ "nx-go-api/app/account/repositories/implementations"
 	_ "nx-go-api/app/account/usecases"
 	_ "nx-go-api/app/account/usecases/implementations"
+	_ "nx-go-api/app/authentication"
+	authadapter "nx-go-api/app/authentication/adapters"
+	_ "nx-go-api/app/authentication/usecase"
 	"os"
 )
 
@@ -24,8 +27,12 @@ type Server struct {
 // NewServer retrieves a pointer to Server.
 func NewServer() *Server {
 	router := gin.Default()
+	// for testing purpose
+	router.Use(CORSMiddleware())
 
 	s := &Server{Router: router}
+	log.SetFormatter(&log.JSONFormatter{})
+	log.SetLevel(log.DebugLevel)
 	//s.loadAuthorizer()
 	s.setupRoutes()
 	s.initModels()
@@ -34,7 +41,9 @@ func NewServer() *Server {
 }
 
 func (s *Server) setupRoutes() {
-	adapters.SetupAccountRoutes(s.Router)
+	accadapter.SetupAccountRoutes(s.Router)
+	authadapter.SetupAuthRoutes(s.Router)
+
 	health(s)
 }
 
@@ -59,20 +68,18 @@ func health(s *Server) {
 	})
 }
 
-//func (s *Server) loadAuthorizer() {
-//	var authorizer *middleware.Authorizer
-//	invokeFunc := func(a *middleware.Authorizer) {
-//		authorizer = a
-//	}
-//	err := core.Injector.Invoke(invokeFunc)
-//
-//	if err != nil {
-//		panic(err)
-//	}
-//
-//	s.authorizer = authorizer
-//}
-//
-//func (s *Server) setupLogger() {
-//	setupLogger(s)
-//}
+func CORSMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
+		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
+		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT")
+
+		if c.Request.Method == "OPTIONS" {
+			c.AbortWithStatus(204)
+			return
+		}
+
+		c.Next()
+	}
+}
