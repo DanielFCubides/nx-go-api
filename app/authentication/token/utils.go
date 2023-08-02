@@ -21,3 +21,21 @@ func GenerateToken(email string, status string, secret string) (string, error) {
 	fmt.Print(tokenSigned)
 	return tokenSigned, nil
 }
+
+func ValidateToken(tokenString string) bool {
+	fmt.Println(tokenString)
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		return []byte("s3cr3t"), nil
+	})
+	if err != nil {
+		fmt.Println("Couldn't parse token:", err)
+		return false
+	}
+	if token.Valid {
+		fmt.Println("You look nice today")
+		return true
+	} else {
+		fmt.Println("Invalid Token:", err)
+		return false
+	}
+}
