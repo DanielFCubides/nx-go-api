@@ -10,6 +10,8 @@ import (
 	"os"
 )
 
+const activeStatus = "active"
+
 type DBAuthUseCase struct {
 	accountRepo repositories.AccountRepository
 }
@@ -33,7 +35,7 @@ func (c DBAuthUseCase) Authenticate(email string, password string) bool {
 	}
 
 	log.Debugf("{\"status\": \"%s\" }", account.Status)
-	if account.Status != "ACTIVE" {
+	if account.Status != activeStatus {
 		log.Infof("{\"authentication\": \"unsucessfull\" }")
 		return false
 	}
