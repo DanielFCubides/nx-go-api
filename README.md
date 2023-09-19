@@ -22,7 +22,7 @@ To get a local copy up and running follow these simple steps.
 git clone https://github.com/DanielFCubides/nx-go-api.git
 ```
 
-2. run with docker-compose
+2. Run with docker-compose
 
 ```shell
 docker-compose up
