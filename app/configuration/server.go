@@ -33,10 +33,8 @@ func NewServer() *Server {
 	s := &Server{Router: router}
 	log.SetFormatter(&log.JSONFormatter{})
 	log.SetLevel(log.DebugLevel)
-	//s.loadAuthorizer()
 	s.setupRoutes()
 	s.initModels()
-	//s.setupLogger()
 	return s
 }
 
