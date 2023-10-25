@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: nx-go-api
-          image: nx-go-api-app:0.0.2
+          image: nx-go-api-app:0.0.3
           env:
             - name: SERVER_PORT
               value: "8001"
