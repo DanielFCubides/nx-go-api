@@ -1,0 +1,115 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nx-go-api-deployment
+  labels:
+    app: nx-go-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nx-go-api
+  template:
+    metadata:
+      labels:
+        app: nx-go-api
+    spec:
+      containers:
+        - name: nx-go-api
+          image: nx-go-api-app:0.0.2
+          env:
+            - name: SERVER_PORT
+              value: "8001"
+            - name: DB_USER_NAME
+              value: us3r
+            - name: DB_USER_PASSWORD
+              value: p455
+            - name: DB_HOST
+              value: mysql-service
+            - name: DB_PORT
+              value: "3306"
+            - name: DB_NAME
+              value: api
+          ports:
+            - containerPort: 8001
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nx-go-api-service
+spec:
+  selector:
+    app: nx-go-api
+  ports:
+    - protocol: TCP
+      port: 8001
+      targetPort: 8001
+  type: LoadBalancer # Use ClusterIP if you do not want to expose it to the internet.
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mysql-secrets
+type: Opaque
+data:
+  MYSQL_ROOT_PASSWORD: cjAwdA==   # Encoded value for "r00t"
+  MYSQL_DATABASE: YXBp # Encoded value for "api"
+  MYSQL_USER: dXMzcg== # Encoded value for "us3r"
+  MYSQL_PASSWORD: cDQ1NQ== # Encoded value for "p455"
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 50Mi
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+        - name: mysql
+          image: mysql
+          envFrom:
+            - secretRef:
+                name: mysql-secrets
+          ports:
+            - containerPort: 3306
+          volumeMounts:
+            - mountPath: /var/lib/mysqlql/data
+              name: mysql-storage
+      volumes:
+        - name: mysql-storage
+          persistentVolumeClaim:
+            claimName: mysql-pvc
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-service
+spec:
+  selector:
+    app: mysql
+  ports:
+    - protocol: TCP
+      port: 3306
+  type: LoadBalancer

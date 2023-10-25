@@ -6,6 +6,8 @@ info:
 servers:
   - description: local
     url: http://localhost:8001
+  - description: kubernetes
+    url: http://localhost:30980
   - description: aws
     url: http://server.dfcubidesc.com:8002
 

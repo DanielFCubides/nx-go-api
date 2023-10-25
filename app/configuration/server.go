@@ -10,13 +10,13 @@ import (
 	_ "nx-go-api/app/account/repositories/implementations"
 	_ "nx-go-api/app/account/usecases"
 	_ "nx-go-api/app/account/usecases/implementations"
+	authAdapter "nx-go-api/app/authentication"
 	"os"
 )
 
 // Server is charge to handle the api operations
 type Server struct {
-	Router *gin.Engine
-	//authorizer *middleware.Authorizer
+	Router     *gin.Engine
 	loggerFile *os.File
 	logger     *log.Logger
 }
@@ -26,7 +26,6 @@ func NewServer() *Server {
 	router := gin.Default()
 
 	s := &Server{Router: router}
-	//s.loadAuthorizer()
 	s.setupRoutes()
 	s.initModels()
 	//s.setupLogger()
@@ -35,6 +34,7 @@ func NewServer() *Server {
 
 func (s *Server) setupRoutes() {
 	adapters.SetupAccountRoutes(s.Router)
+	authAdapter.SetupAuthRoutes(s.Router)
 	health(s)
 }
 
